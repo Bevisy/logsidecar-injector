@@ -1,7 +1,7 @@
-REPO ?= kubespheredev/log-sidecar-injector
+REPO ?= hub.easystack.io/arm64v8/log-sidecar-injector
 TAG ?= 1.1
 SERVICE_NAME ?= logsidecar-injector-admission
-NAMESPACE ?= kubesphere-logging-system
+NAMESPACE ?= kube-system
 
 ifeq (,$(shell go env GOBIN))
 GOBIN=$(shell go env GOPATH)/bin
@@ -19,7 +19,10 @@ vet:
 
 # Build the docker image
 docker-build:
-	docker build -t $(REPO):latest -t $(REPO):$(TAG) .
+	docker buildx build -t $(REPO):latest -t $(REPO):$(TAG) .
+
+docker-build-arm64:
+	docker buildx build --platform arm64 -t $(REPO):latest -t $(REPO):$(TAG) .
 
 # Push the docker image
 docker-push:
